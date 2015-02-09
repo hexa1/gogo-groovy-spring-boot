@@ -1,0 +1,213 @@
+/**
+ * @see http://www.gradle.org/docs/current/userguide/groovy_plugin.html
+ */
+apply plugin: 'groovy'
+
+//apply plugin: 'java'
+
+/**
+ * @see http://www.gradle.org/docs/current/userguide/codenarc_plugin.html
+ */
+apply plugin: 'codenarc'
+
+/**
+ * @see http://docs.spring.io/spring-boot/docs/current/reference/html/build-tool-plugins-gradle-plugin.html
+ */
+apply plugin: 'spring-boot'
+
+apply plugin: 'war'
+
+/**
+ * @see http://mrhaki.blogspot.com/2011/01/gradle-goodness-dont-let-codenarc.html
+ */
+//[codenarcMain, codenarcTest]*.ignoreFailures = true
+
+/**
+ *
+ */
+codenarc {
+  ignoreFailures = true
+  configFile = new File("${project.projectDir}/codenarc-ruleset.groovy")
+}
+
+mainClassName = "app.Application"
+
+// If you are using a milestone or snapshot release you will also need to add appropriate repositories reference:
+buildscript {
+  ext {
+    springBootVersion = '1.2.1.RELEASE'
+  }
+  repositories {
+    jcenter()
+    maven { url "http://repo.spring.io/snapshot" }
+    maven { url "http://repo.spring.io/milestone" }
+  }
+  dependencies {
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+  }
+}
+
+/**
+ *
+ */
+repositories {
+  //mavenCentral()
+  jcenter()
+  //maven { url "http://repo.spring.io/snapshot" }
+  //maven { url "http://repo.spring.io/milestone" }
+  maven { url "http://repo.spring.io/libs-snapshot" }
+}
+
+/**
+ *
+ */
+sourceSets {
+  main {
+      groovy {
+          srcDirs = ['src/main']
+      }
+  }
+  test {
+      groovy {
+          srcDirs = ['src/test']
+      }
+  }
+}
+
+/**
+ *
+ */
+configurations {
+   groovyDoc
+   providedRuntime
+}
+
+war {
+  baseName = 'app'
+  version =  '0.0.1-SNAPSHOT'
+}
+
+run {
+  systemProperties = System.properties
+}
+
+bootRun {
+  if ( project.hasProperty('args') ) {
+    args project.args.split('\\s+')
+  }
+}
+
+/**
+ * @see http://stackoverflow.com/questions/14024756/slf4j-class-path-contains-multiple-slf4j-bindings
+ */
+configurations.all {
+  exclude module: 'slf4j-log4j12'
+}
+
+springBoot {
+//    backupSource = false
+}
+
+/**
+ * @see http://docs.spring.io/spring-boot/docs/current/reference/html/build-tool-plugins-gradle-plugin.html#build-tool-plugins-gradle-repackage-configuration
+ */
+bootRepackage {
+  //mainClass = 'app.Application'
+  //enabled
+  //classifier
+  //withJarTask
+  //customConfiguration
+}
+
+/**
+ *
+ */
+dependencies {
+  //http://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-build-systems.html#using-boot-gradle
+  compile("org.springframework.boot:spring-boot-starter")
+
+  //http://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-build-systems.html#using-boot-gradle
+  providedRuntime("org.springframework.boot:spring-boot-starter-undertow")
+
+  testCompile("org.springframework.boot:spring-boot-starter-test")
+
+  // Prodcution-ready monitoring
+  // http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-enabling.html
+  //compile("org.springframework.boot:spring-boot-starter-actuator")
+
+  compile "org.codehaus.groovy:groovy-all:2.4.0"
+
+  groovyDoc 'org.codehaus.groovy:groovy-groovydoc:2.3.3'
+  groovyDoc 'org.codehaus.groovy:groovy-ant:2.3.3'
+  testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
+}
+
+run {
+  ignoreExitValue = true
+  if(project.hasProperty("appArgs")) {
+    args Eval.me(appArgs)
+  }
+}
+
+/**
+ *
+ */
+groovydoc {
+  groovyClasspath = configurations.groovyDoc
+  destinationDir = new File("${project.projectDir}/docs")
+  docTitle = "App"
+  header = ""
+  footer = ""
+  //windowTitle = ""
+}
+
+/**
+ *
+ */
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.0'
+}
+
+/**
+ * See: https://jdpgrailsdev.github.io/blog/2014/10/14/spring_boot_gradle_git_info.html
+ */
+task generateGitProperties {
+  doLast {
+    try {
+      def branch = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
+      def revision = 'git rev-list --max-count 1 --timestamp HEAD'.execute().text.trim()
+      def commitHash = revision.split(' ').last()
+      def timestamp = revision ? new java.util.Date(java.util.concurrent.TimeUnit.SECONDS.toMillis(revision.split(' ').first() as long)).format("yyyy-MM-dd'T'HH:mm:ssZ") : null
+      File propertiesFile = new File('git.properties')
+      if(timestamp) {
+        // The project may not have any resources, so create the directories and file
+        if(!propertiesFile.exists()) {
+          //resourcesDir.mkdirs()
+          propertiesFile.createNewFile()
+        }
+        propertiesFile.text = """
+          git.branch=${branch}
+          git.commit.id=${commitHash}
+          git.commit.time=${timestamp}"""
+      } else {
+        project.logger.error('Unable to generate Git properties file:  revision could not be retrieved from Git.')
+      }
+    } catch (e) {
+      project.logger.error('Unable to generate Git properties file.', e)
+    }
+  }
+} // generateGitProperties
+
+// Incorporate above
+project.tasks.jar.dependsOn('generateGitProperties')
+project.tasks.war.dependsOn('generateGitProperties')
+
+
+/**
+ *
+ */
+task dist(dependsOn: build, type: Copy) {
+  from ("${buildDir}/${libsDirName}")
+  into ("./dist")
+  include(war.archivePath.name)
+}
