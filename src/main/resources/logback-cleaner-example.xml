@@ -1,0 +1,36 @@
+<!--
+
+See:
+
+http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-logging.html
+
+http://logback.qos.ch/manual/configuration.html
+
+https://github.com/spring-projects/spring-boot/blob/master/spring-boot/src/main/resources/org/springframework/boot/logging/logback/base.xml
+
+-->
+
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+  <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}"/>
+
+  <!-- <include resource="org/springframework/boot/logging/logback/console-appender.xml" />-->
+  <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+
+  <!--  <include resource="org/springframework/boot/logging/logback/base.xml"/> -->
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} [%clr(%5p)] %m%n%wex</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="app" level="DEBUG">
+  </logger>
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+    <!-- <appender-ref ref="FILE" /> -->
+  </root>
+
+</configuration>
