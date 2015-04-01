@@ -15,6 +15,9 @@ apply plugin: 'codenarc'
  */
 apply plugin: 'spring-boot'
 
+/**
+ *
+ */
 apply plugin: 'war'
 
 /**
@@ -27,7 +30,7 @@ apply plugin: 'war'
  */
 codenarc {
   ignoreFailures = true
-  configFile = new File("${project.projectDir}/codenarc-ruleset.groovy")
+  configFile     = new File("${project.projectDir}/codenarc-ruleset.groovy")
 }
 
 mainClassName = "app.Application"
@@ -35,7 +38,7 @@ mainClassName = "app.Application"
 // If you are using a milestone or snapshot release you will also need to add appropriate repositories reference:
 buildscript {
   ext {
-    springBootVersion = '1.2.1.RELEASE'
+    springBootVersion = '1.2.3.RELEASE'
   }
   repositories {
     jcenter()
@@ -63,14 +66,14 @@ repositories {
  */
 sourceSets {
   main {
-      groovy {
-          srcDirs = ['src/main']
-      }
+    groovy {
+        srcDirs = ['src/main']
+    }
   }
   test {
-      groovy {
-          srcDirs = ['src/test']
-      }
+    groovy {
+        srcDirs = ['src/test']
+    }
   }
 }
 
@@ -78,13 +81,13 @@ sourceSets {
  *
  */
 configurations {
-   groovyDoc
-   providedRuntime
+  groovyDoc
+  providedRuntime
 }
 
 war {
   baseName = 'app'
-  version =  '0.0.1-SNAPSHOT'
+  version  =  '0.0.1-SNAPSHOT'
 }
 
 run {
@@ -92,7 +95,7 @@ run {
 }
 
 bootRun {
-  if ( project.hasProperty('args') ) {
+  if (project.hasProperty('args')) {
     args project.args.split('\\s+')
   }
 }
@@ -123,22 +126,23 @@ bootRepackage {
  *
  */
 dependencies {
+  def groovyVersion = "2.4.3"
+
   //http://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-build-systems.html#using-boot-gradle
   compile("org.springframework.boot:spring-boot-starter")
 
   //http://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-build-systems.html#using-boot-gradle
   providedRuntime("org.springframework.boot:spring-boot-starter-undertow")
-
   testCompile("org.springframework.boot:spring-boot-starter-test")
 
   // Prodcution-ready monitoring
   // http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-enabling.html
   //compile("org.springframework.boot:spring-boot-starter-actuator")
 
-  compile "org.codehaus.groovy:groovy-all:2.4.0"
+  compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+  groovyDoc 'org.codehaus.groovy:groovy-groovydoc:${groovyVersion}'
+  groovyDoc 'org.codehaus.groovy:groovy-ant:${groovyVersion}'
 
-  groovyDoc 'org.codehaus.groovy:groovy-groovydoc:2.3.3'
-  groovyDoc 'org.codehaus.groovy:groovy-ant:2.3.3'
   testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
 }
 
@@ -154,18 +158,18 @@ run {
  */
 groovydoc {
   groovyClasspath = configurations.groovyDoc
-  destinationDir = new File("${project.projectDir}/docs")
-  docTitle = "App"
-  header = ""
-  footer = ""
-  //windowTitle = ""
+  destinationDir  = new File("${project.projectDir}/docs")
+  docTitle        = "App"
+  header          = ""
+  footer          = ""
+  //windowTitle   = ""
 }
 
 /**
  *
  */
 task wrapper(type: Wrapper) {
-  gradleVersion = '2.0'
+  gradleVersion = '2.3'
 }
 
 /**
@@ -174,10 +178,10 @@ task wrapper(type: Wrapper) {
 task generateGitProperties {
   doLast {
     try {
-      def branch = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
-      def revision = 'git rev-list --max-count 1 --timestamp HEAD'.execute().text.trim()
-      def commitHash = revision.split(' ').last()
-      def timestamp = revision ? new java.util.Date(java.util.concurrent.TimeUnit.SECONDS.toMillis(revision.split(' ').first() as long)).format("yyyy-MM-dd'T'HH:mm:ssZ") : null
+      def branch          = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
+      def revision        = 'git rev-list --max-count 1 --timestamp HEAD'.execute().text.trim()
+      def commitHash      = revision.split(' ').last()
+      def timestamp       = revision ? new java.util.Date(java.util.concurrent.TimeUnit.SECONDS.toMillis(revision.split(' ').first() as long)).format("yyyy-MM-dd'T'HH:mm:ssZ") : null
       File propertiesFile = new File('git.properties')
       if(timestamp) {
         // The project may not have any resources, so create the directories and file
@@ -201,7 +205,6 @@ task generateGitProperties {
 // Incorporate above
 project.tasks.jar.dependsOn('generateGitProperties')
 project.tasks.war.dependsOn('generateGitProperties')
-
 
 /**
  *
