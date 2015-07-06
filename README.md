@@ -21,6 +21,7 @@ Demonstrates several concepts in boostrapping a Spring app:
 - Many useful resource/info links
 - A typical project structure: `.editorconfig`, `.gitattributes`, `.gitignore`, `.travis.yml`, gradle wrapper, LICENSE, utility shell scripts, etc...
 - Gradle daemon
+- S3 maven and ivy repos
 
 ## Useful Commands
 
