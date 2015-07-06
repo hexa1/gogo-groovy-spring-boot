@@ -2,6 +2,9 @@
 
 A skeleton framework of a Groovy+Gradle Spring Boot 4 application.
 
+- Gradle 2.4
+- Groovy 2.4.3
+
 Demonstrates several concepts in boostrapping a Spring app:
 
 - Using SpringBoot starter
