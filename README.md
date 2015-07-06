@@ -17,6 +17,7 @@ Demonstrates several concepts in boostrapping a Spring app:
 - Basic usage of annotations: @SpringBootApplication, @Autowired, @Component, @Value, @Bean, etc...
 - Many useful resource/info links
 - A typical project structure: `.editorconfig`, `.gitattributes`, `.gitignore`, `.travis.yml`, gradle wrapper, LICENSE, utility shell scripts, etc...
+- Gradle daemon
 
 ## Useful Commands
 
@@ -33,3 +34,7 @@ Demonstrates several concepts in boostrapping a Spring app:
 
 - https://spring.io/guides/gs/spring-boot/
 - http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/
+
+## TODO
+
+- Improve travis.yml with test targets
