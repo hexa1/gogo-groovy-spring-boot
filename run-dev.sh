@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./app --debug
+./app --spring.profiles.active=development

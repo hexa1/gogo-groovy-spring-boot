@@ -1,7 +1,10 @@
 .DS_Store
 .gradle
-build/
-dist/
+/build
+/dist
+/docs
+/src
+/src/docs/asciidoc/images/*.cache
 
 # Ignore Gradle GUI config
 gradle-app.setting

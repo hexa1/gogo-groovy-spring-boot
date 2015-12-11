@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory
 // ... or simply @SpringBootApplication
 @SpringBootApplication
 class Application implements CommandLineRunner {
-  final static Logger log = LoggerFactory.getLogger(Application.class);
+  final static Logger log = LoggerFactory.getLogger(Application.class)
 
   @Autowired
   private Config config

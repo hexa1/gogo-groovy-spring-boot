@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./app
+./app --spring.profiles.active=production

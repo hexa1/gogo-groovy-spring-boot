@@ -2,12 +2,13 @@
 
 A skeleton framework of a Groovy+Gradle Spring Boot 4 application.
 
-- Gradle 2.4
-- Groovy 2.4.3
+- Gradle 2.9
+- Groovy 2.4.5
 
 Demonstrates several concepts in boostrapping a Spring app:
 
 - Using SpringBoot starter
+- Using a whole lot of other spring boot starters
 - Building (fat) distributable and executable war using `./gradlew dist` or `./build.sh`
 - Running a dev-time instance of the app and passing parameters using `./app --param`
 - Passing git properties to Spring boot (for diagnostics)
@@ -42,3 +43,4 @@ Demonstrates several concepts in boostrapping a Spring app:
 ## TODO
 
 - Improve travis.yml with test targets
+- TODO: Pack200: http://docs.oracle.com/javase/7/docs/technotes/tools/share/pack200.html
