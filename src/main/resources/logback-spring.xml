@@ -1,0 +1,40 @@
+<!--
+
+See:
+
+http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-logging.html
+
+http://logback.qos.ch/manual/configuration.html
+
+https://github.com/spring-projects/spring-boot/blob/master/spring-boot/src/main/resources/org/springframework/boot/logging/logback/base.xml
+
+-->
+
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+  <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}"/>
+
+  <!-- <include resource="org/springframework/boot/logging/logback/console-appender.xml" />-->
+  <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+
+  <!--  <include resource="org/springframework/boot/logging/logback/base.xml"/> -->
+
+  <!--
+  See: https://github.com/spring-projects/spring-boot/blob/eeb407881a8d5f52aca77960f9ab2f9f6c2f84b3/spring-boot/src/main/resources/org/springframework/boot/logging/logback/defaults.xml
+  -->
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} [%clr(%5p)] %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="app" level="DEBUG">
+  </logger>
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+    <!-- <appender-ref ref="FILE" /> -->
+  </root>
+
+</configuration>

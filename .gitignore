@@ -3,7 +3,6 @@
 /build
 /dist
 /docs
-/src
 /src/docs/asciidoc/images/*.cache
 
 # Ignore Gradle GUI config
