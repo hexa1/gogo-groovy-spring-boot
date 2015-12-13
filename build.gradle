@@ -11,7 +11,10 @@ buildscript {
     //maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
   }
   dependencies {
-    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    //http://mrhaki.blogspot.com/2015/09/spring-sweets-reload-classes-spring.html
+    // You'll need to start another gradle instance with $ ./gradlew -t classes
+    classpath "org.springframework:springloaded:$springLoadedVersion"
     classpath "info.solidsoft.gradle.pitest:gradle-pitest-plugin:${pitestPluginVersion}"
     classpath 'org.asciidoctor:asciidoctorj-epub3:' + asciidoctorjEpub3Version
     classpath 'org.asciidoctor:asciidoctorj-pdf:' + asciidoctorjPdfVersion

@@ -35,6 +35,11 @@ Demonstrates several concepts in boostrapping a Spring app:
 - `gradle wrapper` Re-generate wrapper (graldew, gradlew.bat)
 - `./app` Run the application in development as standalone (emulates distribution)
 
+## Spring Live-reload
+
+1. Start a normal gradle instance with the `bootRun` target
+1. Start another gradle instance to watch class changes: `$ ./gradlew -t classes`
+
 ## Must-read Resources
 
 - https://spring.io/guides/gs/spring-boot/
